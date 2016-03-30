@@ -1,0 +1,25 @@
+{
+  "name": "wert2all/tmp",
+  "description": "xcxc",
+  "minimum-stability": "dev",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "wert2all",
+      "email": "wert2all@gmail.com"
+    }
+  ],
+  "require": {
+    "phpunit/phpunit": "5.4.x-dev"
+  },
+  "autoload": {
+    "classmap": [
+      "classes/"
+    ]
+  },
+  "autoload-dev": {
+    "classmap": [
+      "tests/"
+    ]
+  }
+}
