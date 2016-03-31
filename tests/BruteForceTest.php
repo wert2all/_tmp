@@ -31,10 +31,9 @@ class BruteForceTest extends PHPUnit_Framework_TestCase
 
     protected function setCantLogin()
     {
-        $this->model
-            ->set(BruteForce::MODEL_KEY_BAD_ATTEMPTS_COUNT, BruteForce::DEFAULT_ATTEMPTS_COUNT + 1)
-            ->set(BruteForce::MODEL_KEY_LAST_BAD_TIME, time())
-            ->save();
+        for ($i = 0; $i < BruteForce::DEFAULT_ATTEMPTS_COUNT + 1; $i++) {
+            $this->validator->doBadLogin();
+        }
     }
 
     public function testTimeToAttempt()
@@ -111,6 +110,21 @@ class BruteForceTest extends PHPUnit_Framework_TestCase
 
         $this->assertTrue($this->model->get(BruteForce::MODEL_KEY_LAST_BAD_TIME) > $fakeTime);
 
+    }
+
+    public function testIsCanLoginAfterTime()
+    {
+        $this->setCantLogin();
+
+        $timeToAttempt = $this->model->get(BruteForce::MODEL_KEY_DIFF_TIME_TO_ATTEMPT) - 10;
+        $this->model
+            ->set(
+                BruteForce::MODEL_KEY_LAST_BAD_TIME,
+                $this->model->get(BruteForce::MODEL_KEY_LAST_BAD_TIME) - $timeToAttempt
+            )
+            ->save();
+
+        $this->assertTrue($this->validator->isCanLogin());
     }
 
     protected function setUp()
