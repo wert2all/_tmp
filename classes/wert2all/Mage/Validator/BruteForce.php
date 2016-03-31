@@ -37,7 +37,19 @@ class BruteForce
 
     public function isCanLogin()
     {
-        return $this->getBadAttempts() <= $this->getConfigAttemptsCount();
+
+        if ($this->getBadAttempts() > $this->getConfigAttemptsCount()) {
+            $lastBadLogin = intval($this->model->get(self::MODEL_KEY_LAST_BAD_TIME));
+            if ($lastBadLogin > 0) {
+                $timeDiff = $this->model->get(self::MODEL_KEY_DIFF_TIME_TO_ATTEMPT, self::DEFAULT_DIFF_TIME_TO_ATTEMPT);
+                $currentTime = time();
+                $checkTime = $lastBadLogin + $timeDiff;
+                if ($checkTime > $currentTime) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     /**

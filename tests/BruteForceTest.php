@@ -116,7 +116,14 @@ class BruteForceTest extends PHPUnit_Framework_TestCase
     {
         $this->setCantLogin();
 
-        $timeToAttempt = $this->model->get(BruteForce::MODEL_KEY_DIFF_TIME_TO_ATTEMPT) - 10;
+        $this->model
+            ->delete(BruteForce::MODEL_KEY_LAST_BAD_TIME)
+            ->save();
+        $this->assertTrue($this->validator->isCanLogin());
+
+        $this->setCantLogin();
+
+        $timeToAttempt = $this->model->get(BruteForce::MODEL_KEY_DIFF_TIME_TO_ATTEMPT) + 10;
         $this->model
             ->set(
                 BruteForce::MODEL_KEY_LAST_BAD_TIME,
