@@ -10,8 +10,12 @@ namespace Mage\Model;
 
 class BruteForceConfig implements ModelConfigInterface
 {
-
+    /**
+     * @var array
+     */
     protected $data = array();
+    /** @var string */
+    protected $configFile;
 
     /**
      * BruteForceConfig constructor.
@@ -28,6 +32,9 @@ class BruteForceConfig implements ModelConfigInterface
         }
     }
 
+    /**
+     * @throws \Exception
+     */
     public function readConfig()
     {
         if (false === $data = parse_ini_file($this->configFile)) {

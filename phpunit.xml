@@ -1,6 +1,6 @@
 <phpunit bootstrap="./vendor/autoload.php"
          colors="true"
-         stopOnFailure="true">
+         stopOnFailure="false">
 
     <testsuite name="Main Test Suite">
         <directory>./tests/</directory>
@@ -9,6 +9,7 @@
     <filter>
         <blacklist>
             <directory suffix=".php">./tests</directory>
+            <directory>./vendor</directory>
         </blacklist>
         <whitelist>
             <directory suffix=".php">./classes/</directory>

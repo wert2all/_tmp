@@ -20,7 +20,7 @@ class BruteForce
 
     const DEFAULT_ATTEMPTS_COUNT = 3;
     const DEFAULT_BAD_ATTEMPTS_COUNT = 0;
-    const DEFAULT_DIFF_TIME_TO_ATTEMPT = 3 * 60 * 60; // 3 minutes
+    const DEFAULT_DIFF_TIME_TO_ATTEMPT = 3 * 60 * 60;// 3 minutes
 
 
     /** @var ModelConfigInterface */
@@ -93,11 +93,17 @@ class BruteForce
 
     public function doBadLogin()
     {
-        $badAttempts = $this->getBadAttempts();
+        $badAttempts = $this->getBadAttempts() + 1;
+        $configAttempsCount = $this->getConfigAttemptsCount();
+        $timeToNextLogin = $this->getDiffTimeToNextAttempt();
+
+        if ($badAttempts % $configAttempsCount == 0 and $badAttempts != $configAttempsCount) {
+            $timeToNextLogin += self::DEFAULT_DIFF_TIME_TO_ATTEMPT;
+        }
 
         $this->model
-            ->set(self::MODEL_KEY_BAD_ATTEMPTS_COUNT, ++$badAttempts)
-            ->set(self::MODEL_KEY_DIFF_TIME_TO_ATTEMPT, $this->getDiffTimeToNextAttempt())
+            ->set(self::MODEL_KEY_BAD_ATTEMPTS_COUNT, $badAttempts)
+            ->set(self::MODEL_KEY_DIFF_TIME_TO_ATTEMPT, $timeToNextLogin)
             ->set(self::MODEL_KEY_LAST_BAD_TIME, time())
             ->save();
     }

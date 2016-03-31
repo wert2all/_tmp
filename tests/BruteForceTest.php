@@ -19,7 +19,6 @@ class BruteForceTest extends PHPUnit_Framework_TestCase
 
     public function testCanLogin()
     {
-        $this->validator->reset();
         $this->assertTrue($this->validator->isCanLogin());
     }
 
@@ -132,6 +131,27 @@ class BruteForceTest extends PHPUnit_Framework_TestCase
             ->save();
 
         $this->assertTrue($this->validator->isCanLogin());
+    }
+
+    public function testEnlargeTimeToLogin()
+    {
+        $this->setCantLogin();
+        $this->assertEquals(BruteForce::DEFAULT_DIFF_TIME_TO_ATTEMPT, $this->validator->getTimeToAttempt());
+
+        $this->setCantLogin();
+        $this->assertEquals(BruteForce::DEFAULT_DIFF_TIME_TO_ATTEMPT * 2, $this->validator->getTimeToAttempt());
+
+    }
+
+    public function testGoodLoginAfterBad()
+    {
+        $this->setCantLogin();
+        $this->setCantLogin();
+        $this->assertEquals(BruteForce::DEFAULT_DIFF_TIME_TO_ATTEMPT * 2, $this->validator->getTimeToAttempt());
+        $this->validator->doGoodLogin();
+        $this->checkReset();
+        $this->setCantLogin();
+        $this->assertEquals(BruteForce::DEFAULT_DIFF_TIME_TO_ATTEMPT, $this->validator->getTimeToAttempt());
     }
 
     protected function setUp()
