@@ -85,10 +85,12 @@ class IniModelTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(null, $this->model->get("test"));
     }
 
-    protected function setUp()
+    /**
+     * @expectedException Exception
+     */
+    public function testBadFilePath()
     {
-        parent::setUp();
-        $this->model = new BruteForceConfig(self::getConfigPath());
+        new BruteForceConfig(self::getConfigPath() . "bad");
     }
 
     /**
@@ -97,5 +99,11 @@ class IniModelTest extends PHPUnit_Framework_TestCase
     public static function getConfigPath()
     {
         return dirname(__FILE__) . DIRECTORY_SEPARATOR . "good_test.ini";
+    }
+
+    protected function setUp()
+    {
+        parent::setUp();
+        $this->model = new BruteForceConfig(self::getConfigPath());
     }
 }
