@@ -59,14 +59,6 @@ class FTP implements ResourceInterface
         return ($this->ftp->get($this->localFilePath, $this->remoteFilePath) === true);
     }
 
-    /**
-     * @return string
-     */
-    public function isWritable()
-    {
-        return $this->isReadable();
-    }
-
     function __destruct()
     {
         $this->ftp->close();
@@ -78,9 +70,21 @@ class FTP implements ResourceInterface
      */
     public function write($content)
     {
-        return $this->ftp->upload(
-            $this->remoteFilePath,
-            $this->localFilePath
-        );
+        if ($this->isWritable()) {
+            file_put_contents($this->localFilePath, $content);
+            return $this->ftp->upload(
+                $this->remoteFilePath,
+                $this->localFilePath
+            );
+        }
+        return false;
+    }
+
+    /**
+     * @return string
+     */
+    public function isWritable()
+    {
+        return ($this->isReadable());
     }
 }

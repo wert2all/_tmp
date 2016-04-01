@@ -16,7 +16,7 @@ use PHPUnit_Framework_TestCase;
 use stdClass;
 use Tests\Framework\ResourceProvider;
 
-class ModelWithFileTest extends PHPUnit_Framework_TestCase
+class ModelTest extends PHPUnit_Framework_TestCase
 {
 
     /**

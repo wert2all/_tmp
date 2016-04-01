@@ -3,10 +3,13 @@
 use Mage\Model\Resource\FTP;
 
 include "vendor/autoload.php";
+$ftp = new FTP(
+    "ftp://wert2all:_wert2all@localhost/",
+    dirname(__FILE__) . DIRECTORY_SEPARATOR . "ftp.ini",
+    "/home/wert2all/work/tmp.txt"
+);
 
-$res = new FTP("ftp://wert2all:_wert2all@localhost/", dirname(__FILE__) . DIRECTORY_SEPARATOR . "test.ini", "/home/wert2all/work/code/magento1/downloader/index.php");
-$ma = new Mage_Connect_Ftp();
+var_dump($ftp->read());
 
-$ma->connect( "ftp://wert2all:_wert2all@localhost/");
-
-var_dump( $res->isReadable());
+$ftp->write("xxx");
+var_dump($ftp->read());
