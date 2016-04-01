@@ -7,14 +7,18 @@
  * @license     {license_link}
  */
 
-use Mage\Model\BruteForceConfig;
+namespace Tests;
+
+use Mage\Model\ConfigIni;
 use Mage\Validator\BruteForce;
+use PHPUnit_Framework_TestCase;
+use Tests\Framework\ResourceProvider;
 
 class BruteForceTest extends PHPUnit_Framework_TestCase
 {
     /** @var  BruteForce */
     protected $validator;
-    /** @var  BruteForceConfig */
+    /** @var  ConfigIni */
     protected $model;
 
     public function testCanLogin()
@@ -158,7 +162,11 @@ class BruteForceTest extends PHPUnit_Framework_TestCase
     {
         parent::setUp();
 
-        $this->model = new BruteForceConfig(IniModelTest::getConfigPath());
+        $provider = new ResourceProvider();
+        $resources = $provider->getGoodResources();
+        $resource = current($resources);
+
+        $this->model = new ConfigIni($resource);
         $this->validator = new BruteForce($this->model);
     }
 

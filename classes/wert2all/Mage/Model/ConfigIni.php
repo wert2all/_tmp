@@ -8,27 +8,31 @@
 
 namespace Mage\Model;
 
-class BruteForceConfig implements ModelConfigInterface
+use Mage\Model\Resource\ResourceInterface;
+
+class ConfigIni implements ModelConfigInterface
 {
     /**
      * @var array
      */
     protected $data = array();
-    /** @var string */
-    protected $configFile;
+    /**
+     * @var ResourceInterface
+     */
+    private $resource;
 
     /**
      * BruteForceConfig constructor.
-     * @param string $filePath
+     * @param ResourceInterface $resource
      * @throws \Exception
      */
-    public function __construct($filePath)
+    public function __construct(ResourceInterface $resource)
     {
-        if (is_file($filePath) and is_readable($filePath)) {
-            $this->configFile = $filePath;
+        if ($resource->isReadable()) {
+            $this->resource = $resource;
             $this->readConfig();
         } else {
-            throw new \Exception("Can't read config file " . $filePath . ".");
+            throw new \Exception("Can't read config file.");
         }
     }
 
@@ -37,8 +41,8 @@ class BruteForceConfig implements ModelConfigInterface
      */
     public function readConfig()
     {
-        if (false === $data = parse_ini_file($this->configFile)) {
-            throw new \Exception("Bad ini file.");
+        if (false === $data = parse_ini_string($this->resource->read())) {
+            throw new \Exception("Bad config file.");
         }
         $this->data = $data;
     }
@@ -70,15 +74,15 @@ class BruteForceConfig implements ModelConfigInterface
 
     public function save()
     {
-        $res = array();
-        foreach ($this->data as $key => $value) {
-            $res[] = "$key = " . (is_numeric($value) ? $value : '"' . $value . '"');
-        }
-        $content = implode("\n", $res);
-        if (is_writable($this->configFile)) {
-            file_put_contents($this->configFile, $content);
+        if ($this->resource->isWritable()) {
+            $res = array();
+            foreach ($this->data as $key => $value) {
+                $res[] = "$key = " . (is_numeric($value) ? $value : '"' . $value . '"');
+            }
+            $content = implode("\n", $res);
+            $this->resource->write($content);
         } else {
-            throw new \Exception("Can't write to file " . $this->configFile . ".");
+            throw new \Exception("Can't write to config.");
         }
     }
 
