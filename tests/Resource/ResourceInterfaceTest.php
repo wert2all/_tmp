@@ -33,7 +33,7 @@ class ResourceInterfaceTest extends \PHPUnit_Framework_TestCase
         foreach ($goodResourceObjects as $index => $resourceObject) {
             $return[] = array(
                 $resourceObject,
-                ($badResourceObjects[$index] ? $badResourceObjects[$index] : null)
+                (isset($badResourceObjects[$index]) ? $badResourceObjects[$index] : null)
             );
         }
         return $return;
